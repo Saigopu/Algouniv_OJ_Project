@@ -25,3 +25,10 @@ client/npm-debug.log*
 client/yarn-debug.log*
 client/yarn-error.log*
 
+rough.txt
+gitnote.txt
+gitnoteReference
+# google auth client details
+client_secret_google_auth.json
+
+localDB1_1.jpeg
