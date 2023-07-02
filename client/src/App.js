@@ -8,26 +8,26 @@ import Editor from "./Components/Editor";
 function App() {
   const [isLogged, setIsLogged] = useState(false);
 
-  // useEffect(() => {
-  //   cookiePresent();
-  // }, []);
+  useEffect(() => {
+    cookiePresent();
+  }, []);
 
-  // function cookiePresent() {
-  //   var cookies = document.cookie.split(";");
-  //   var cookieValue;
-  //   const cookieName = "token";
-  //   for (var i = 0; i < cookies.length; i++) {
-  //     var cookiePair = cookies[i].trim();
-  //     if (cookiePair.startsWith(cookieName + "=")) {
-  //       cookieValue = cookiePair.substring(cookieName.length + 1);
-  //     }
-  //   }
-  //   if (cookieValue !== undefined) {
-  //     console.log("control at app.js line 21", cookieValue);
-  //     setIsLogged(true);
-  //     console.log(isLogged);
-  //   }
-  // }
+  function cookiePresent() {
+    var cookies = document.cookie.split(";");
+    var cookieValue;
+    const cookieName = "token";
+    for (var i = 0; i < cookies.length; i++) {
+      var cookiePair = cookies[i].trim();
+      if (cookiePair.startsWith(cookieName + "=")) {
+        cookieValue = cookiePair.substring(cookieName.length + 1);
+      }
+    }
+    if (cookieValue !== undefined) {
+      console.log("control at app.js line 21", cookieValue);
+      setIsLogged(true);
+      console.log(isLogged);
+    }
+  }
 
   // useEffect(()=>{
   //   console.log(isLogged)
@@ -38,7 +38,7 @@ function App() {
   }
 
   function handleLogout() {
-    console.log("logout button clicked")
+    console.log("logout button clicked");
     setIsLogged(false);
   }
   return (
@@ -47,11 +47,19 @@ function App() {
         <Route path="/" element={<AuthPage onLogin={handleLogin} />} />
         <Route
           path="/problemList"
-          element={isLogged ? <ProblemList onLogout={handleLogout}/> : <Navigate to="/" />}
+          element={
+            isLogged ? (
+              <ProblemList onLogout={handleLogout} />
+            ) : (
+              <Navigate to="/" />
+            )
+          }
         />
         <Route
           path="/editor"
-          element={isLogged ? <Editor onLogout={handleLogout}/> : <Navigate to="/" />}
+          element={
+            isLogged ? <Editor onLogout={handleLogout} /> : <Navigate to="/" />
+          }
         />
       </Routes>
     </BrowserRouter>
