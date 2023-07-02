@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import AuthPage from "./Components/AuthPage.js";
 import ProblemList from "./Components/ProblemList.js";
 import { useState, useEffect } from "react";
+import Editor from "./Components/Editor";
 
 function App() {
   const [isLogged, setIsLogged] = useState(false);
@@ -47,6 +48,10 @@ function App() {
         <Route
           path="/problemList"
           element={isLogged ? <ProblemList onLogout={handleLogout}/> : <Navigate to="/" />}
+        />
+        <Route
+          path="/editor"
+          element={isLogged ? <Editor onLogout={handleLogout}/> : <Navigate to="/" />}
         />
       </Routes>
     </BrowserRouter>

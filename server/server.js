@@ -1,12 +1,16 @@
 import express from "express";
 import router from "./routes/routes.js";
 import cors from 'cors'
+import cookieParser from "cookie-parser";
 
 // i didnt mention the .js extension here and the app was crashing. extensions are important in the backend
 const app = express();
 const port = 8000;
 
+app.use(cookieParser());
+//here the cookieParser is the function and the parenthesis is important
 // app.use(cors());
+//we have to change the origin when we move the env to production
 app.use(cors({
     origin: "http://localhost:3000",
     credentials: true

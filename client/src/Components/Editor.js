@@ -1,7 +1,11 @@
-import React from 'react'
-
-export default function Editor() {
+import React from "react";
+import Navbar from "./Navbar";
+function Editor({ onLogout }) {
   return (
-    <div>Editor</div>
-  )
+    <div>
+      <Navbar onLogout={onLogout} />
+    </div>
+  );
 }
+
+export default Editor;

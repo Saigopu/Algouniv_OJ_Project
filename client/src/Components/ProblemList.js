@@ -1,38 +1,18 @@
 import React from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import LogOut from "./LogOut";
-
+import Navbar from "./Navbar";
 const API_URI = "http://localhost:8000";
-function ProblemList({onLogout}) {
+function ProblemList({ onLogout }) {
   const navigate = useNavigate();
   async function handleCall() {
-    console.log(document.cookie);
-    var cookies = document.cookie.split(";"); // Step 2
-    var cookieValue;
-    const cookieName = "token";
-    for (var i = 0; i < cookies.length; i++) {
-      var cookiePair = cookies[i].trim();
-      if (cookiePair.startsWith(cookieName + "=")) {
-        // Step 3
-        cookieValue = cookiePair.substring(cookieName.length + 1); // Step 4
-      }
-    }
-    if (cookieValue === undefined) {
-      alert("session expired");
-      navigate("/");
-      return;
-    }
-    console.log(cookieValue);
-    const response = await axios
+    //withcredentials is for sending and receiving the cookies from apis
+    await axios
       .post(
         `${API_URI}/problemList`,
         {},
         {
           withCredentials: true,
-          headers: {
-            authorization: `token ${cookieValue}`,
-          },
         }
       )
       .then((res) => {
@@ -53,8 +33,8 @@ function ProblemList({onLogout}) {
 
   return (
     <div className="flex gap-14">
+      <Navbar onLogout={onLogout} />
       <button onClick={handleCall}>call</button>
-      <LogOut onLogout={onLogout}/>
     </div>
   );
 }
