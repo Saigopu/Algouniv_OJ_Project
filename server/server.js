@@ -1,8 +1,19 @@
 import express from "express";
 import router from "./routes/routes.js";
-// i didnt mention the .js extension here and i the app was crashing. extensions are important in the backend
+import cors from 'cors'
+
+// i didnt mention the .js extension here and the app was crashing. extensions are important in the backend
 const app = express();
 const port = 8000;
+
+// app.use(cors());
+app.use(cors({
+    origin: "http://localhost:3000",
+    credentials: true
+  }));
+app.use(express.json());
+app.use(express.urlencoded({extended:true}));
+
 
 /*
 app.use('/',(req,res)=>{
