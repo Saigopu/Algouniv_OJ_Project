@@ -7,40 +7,37 @@ import Editor from "./Components/Editor";
 
 function App() {
   const [isLogged, setIsLogged] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    cookiePresent();
+    checkLocalStorage();
   }, []);
 
-  function cookiePresent() {
-    var cookies = document.cookie.split(";");
-    var cookieValue;
-    const cookieName = "token";
-    for (var i = 0; i < cookies.length; i++) {
-      var cookiePair = cookies[i].trim();
-      if (cookiePair.startsWith(cookieName + "=")) {
-        cookieValue = cookiePair.substring(cookieName.length + 1);
-      }
-    }
-    if (cookieValue !== undefined) {
-      console.log("control at app.js line 21", cookieValue);
+  function checkLocalStorage() {
+    const token = sessionStorage.getItem("token");
+    if (token) {
       setIsLogged(true);
-      console.log(isLogged);
     }
+    setIsLoading(false);
+    //state update in react is asynchronous, the remaining part is executed even before the state is updated, so we have to hold the control flow at proper places for the desired behavior of the app
   }
-
-  // useEffect(()=>{
-  //   console.log(isLogged)
-  // },[isLogged])
 
   function handleLogin() {
     setIsLogged(true);
+    sessionStorage.setItem("token", "your_token_here");
   }
 
   function handleLogout() {
-    console.log("logout button clicked");
     setIsLogged(false);
+    sessionStorage.removeItem("token");
   }
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+  //this is to implement the feature that when we reload the page then it should not redirect to the authpage because we already done with the authentication, so we are stopping the control with this return to not to go to the path "/" and when the islogged is changed the component will trigger a re-render then the other return will work
+  //before the above return was there , had a problem that when we are in a page and reload it then we are redirected to authpage
+
   return (
     <BrowserRouter>
       <Routes>
