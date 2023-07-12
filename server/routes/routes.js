@@ -25,12 +25,12 @@ router.post("/problemList", validateJwt, (req, res) => {
 
 router.post("/run", validateJwt, async (req, res) => {
   try {
-    const { lang = "cpp", code } = req.body;
+    const { lang = "cpp", code,input } = req.body;
     if (code === undefined) {
       res.status(404).json({ success: false, error: "empty code" });
     }
     const filepath = await generateFile(lang, code);
-    const output = await execute(filepath);
+    const output = await execute(filepath,input);
 
     res.json({ filepath, output });
   } catch (error) {

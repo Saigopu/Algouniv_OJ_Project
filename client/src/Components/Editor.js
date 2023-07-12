@@ -7,19 +7,21 @@ import { useNavigate } from "react-router-dom";
 const API_URI = "http://localhost:8000";
 function Editor({ onLogout }) {
   const navigate = useNavigate();
-  const [userCode, setUserCode] = useState();
-  const [result,setResult]=useState(null);
+  const [userCode, setUserCode] = useState("");
+  const [userInput, setUserInput] = useState("");
+  const [result, setResult] = useState(null);
 
 
-//   useEffect(() => {
-//     console.log(userCode);
-//   }, [userCode]);
+  //   useEffect(() => {
+  //     console.log(userCode);
+  //   }, [userCode]);
 
   async function handleSubmit() {
+    console.log(typeof userInput);
     await axios
       .post(
         `${API_URI}/run`,
-        { lang: "cpp", code: userCode },
+        { lang: "cpp", code: userCode, input: userInput },
         {
           withCredentials: true,
         }
@@ -58,10 +60,25 @@ function Editor({ onLogout }) {
         className="border-2 border-black rounded block"
         onChange={(e) => setUserCode(e.target.value)}
       ></textarea>
+      <textarea
+        name=""
+        id=""
+        cols="30"
+        rows="10"
+        className="border-2 border-black rounded block"
+        onChange={(e) => setUserInput(e.target.value)}
+      ></textarea>
       <button onClick={handleSubmit} className="mt-11">submit</button>
       {
-        result!==null && 
-        <p>{result}</p>
+        result !== null &&
+        <textarea
+        name=""
+        id=""
+        value={result}
+        cols="30"
+        rows="10"
+        className="border-2 border-black rounded block"
+      ></textarea>
       }
     </div>
   );
