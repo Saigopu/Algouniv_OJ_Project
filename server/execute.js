@@ -30,9 +30,13 @@ export const execute = (filepath, input) => {
     //     resolve(stdout);
     // })
     let output = "";
-    const command = `g++ "${filepath}" -o "${outPath}" && cd "${outputPath}" && .\\${jobId}.exe`;
-    //spawn is like the inbuilt function, in this type of cases it is better to define the parameters and then pass instead passing directly, here when i passed the command directly then i had so many errors
-    const process = spawn("cmd", ["/s", "/c", command], { shell: true });
+    // const command = `g++ "${filepath}" -o "${outPath}" && cd "${outputPath}" && .\\${jobId}.exe`;
+    const command = `g++ ${filepath} -o ${outPath} && cd ${outputPath} && ./${jobId}.exe`;
+    //spawn is like the inbuilt function, in this type of cases it is better to define the parameters and then pass instead passing directly, here when i passed the command directly then i was getting an error ragarding the spaces in the filepath
+    // const process = spawn("cmd", ["-c", command]);
+    
+    // const process = spawn("cmd", ["/s", "/c", command], { shell: true });//used this when i was using the windows(for making it to run locally)
+    const process = spawn("sh", ["-c", command]);//used this when i was using the linux(for making it to run in docker container)
 
     process.stdin.write(input);
     process.stdin.end();
@@ -41,7 +45,7 @@ export const execute = (filepath, input) => {
       output += data.toString();
     });
     process.stderr.on("data", (data) => {
-      console.log("here at stderr");
+      console.log("here at stderr", data);
       output += data.toString();
     });
     process.on("close", (code) => {
@@ -49,7 +53,9 @@ export const execute = (filepath, input) => {
         resolve(output);
       } else {
         console.log(output, typeof output);
-        reject(`program ended with exit code ${code}, ${output.error || output}`);
+        reject(
+          `program ended with exit code ${code}, ${output.error || output}`
+        );
       }
     });
   });

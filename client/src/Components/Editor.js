@@ -4,7 +4,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-const API_URI = "http://localhost:8000";
+const API_URI = "http://localhost:3000";
 function Editor({ onLogout }) {
   const navigate = useNavigate();
   const [userCode, setUserCode] = useState("");
@@ -18,7 +18,8 @@ function Editor({ onLogout }) {
 
   async function handleSubmit() {
     console.log(typeof userInput);
-    await axios
+    try{
+      await axios
       .post(
         `${API_URI}/run`,
         { lang: "cpp", code: userCode, input: userInput },
@@ -47,6 +48,11 @@ function Editor({ onLogout }) {
         }
         //display a proper message and delete the token if present in the cookie and route to the login page
       });
+    }
+    catch(error){
+      console.log(error)
+      console.log("some error occured in compiling in the backend(issue with spawn i guess), please try again")
+    }
   }
 
   return (

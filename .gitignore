@@ -13,6 +13,7 @@ client/coverage
 
 # production
 client/build
+server/build
 
 #server env file
 server/.env
@@ -29,6 +30,7 @@ client/yarn-debug.log*
 client/yarn-error.log*
 
 rough.txt
+rough1.txt
 gitnote.txt
 gitnoteReference
 # google auth client details

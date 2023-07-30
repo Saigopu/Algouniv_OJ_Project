@@ -2,7 +2,7 @@ import React from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
-const API_URI = "http://localhost:8000";
+const API_URI = "http://localhost:3000";
 function ProblemList({ onLogout }) {
   const navigate = useNavigate();
   async function handleCall() {
