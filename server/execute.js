@@ -30,13 +30,14 @@ export const execute = (filepath, input) => {
     //     resolve(stdout);
     // })
     let output = "";
-    // const command = `g++ "${filepath}" -o "${outPath}" && cd "${outputPath}" && .\\${jobId}.exe`;
-    const command = `g++ ${filepath} -o ${outPath} && cd ${outputPath} && ./${jobId}.exe`;
+
+    const command = `g++ "${filepath}" -o "${outPath}" && cd "${outputPath}" && .\\${jobId}.exe`;//this command is working when i run locally with the spawn which has cmd as the first parameter
+    // const command = `g++ ${filepath} -o ${outPath} && cd ${outputPath} && ./${jobId}.exe`;//this command is working when i run in docker container with the spawn which has sh as the first parameter
+
     //spawn is like the inbuilt function, in this type of cases it is better to define the parameters and then pass instead passing directly, here when i passed the command directly then i was getting an error ragarding the spaces in the filepath
-    // const process = spawn("cmd", ["-c", command]);
     
-    // const process = spawn("cmd", ["/s", "/c", command], { shell: true });//used this when i was using the windows(for making it to run locally)
-    const process = spawn("sh", ["-c", command]);//used this when i was using the linux(for making it to run in docker container)
+    const process = spawn("cmd", ["/s", "/c", command], { shell: true });//used this when i was using the windows(for making it to run locally)
+    // const process = spawn("sh", ["-c", command]);//used this when i was using the linux(for making it to run in docker container)
 
     process.stdin.write(input);
     process.stdin.end();

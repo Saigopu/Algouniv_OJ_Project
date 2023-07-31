@@ -35,7 +35,7 @@ app.use('/',(req,res)=>{
 //Whereas when we open localhost at port 3000, as soon as loads an api call is happening with the route http://localhost:3000/ and the response is index.html
 */
 
-app.use('/',router);
+app.use('/api',router);// this is to differentaite the routes of the frontend and the api routes if we use the build folder to serve the html file without running the react
 
 DBconnection();
 

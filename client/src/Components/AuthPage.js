@@ -15,21 +15,29 @@ function AuthPage({ onLogin }) {
     console.log(codeResponse);
     const code = codeResponse.code;
 
-    const response = await axios.post(
-      `${API_URI}/login`,
-      {
-        googleCode: code,
-      },
-      {
-        withCredentials: true,
+    try{
+      const response = await axios.post(
+        `${API_URI}/api/login`,
+        {
+          googleCode: code,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+      console.log(response);
+      console.log(response.data);
+      console.log(response.status);
+      console.log(response.headers);
+      onLogin();
+      navigate("/problemList");
+    }
+    catch(err){
+      console.log(err);
+      if(err.response.status===500){
+        console.log(err.response.data.msg);
       }
-    );
-    console.log(response);
-    console.log(response.data);
-    console.log(response.status);
-    console.log(response.headers);
-    onLogin();
-    navigate("/problemList");
+    }
   }
 
   async function manLogin() {
@@ -37,7 +45,7 @@ function AuthPage({ onLogin }) {
     const password = document.getElementById("password").value;
 
     const response = await axios.post(
-      `${API_URI}/apiManLogin`,
+      `${API_URI}/api/manLogin`,
       {
         email,
         password,
@@ -61,6 +69,10 @@ function AuthPage({ onLogin }) {
       document.getElementById("password").value="";
       return;
     }
+    else{
+      alert(response.data.msg);
+      return;
+    }
     onLogin();
     navigate("/problemList");
   }
@@ -74,7 +86,7 @@ function AuthPage({ onLogin }) {
     // Perform sign-up API call
     try {
       const response = await axios.post(
-        `${API_URI}/apiSignUp`,
+        `${API_URI}/api/signUp`,
         {
           name,
           email,
@@ -118,7 +130,7 @@ function AuthPage({ onLogin }) {
     console.log(email);
     try {
       const response = await axios.post(
-        `${API_URI}/apiVerifyOTP`,
+        `${API_URI}/api/verifyOTP`,
         {
           name,
           email,
@@ -156,7 +168,7 @@ function AuthPage({ onLogin }) {
     const email = document.getElementById("signupEmail").value;
     try {
       const response = await axios.post(
-        `${API_URI}/apiDeleteAccount`,
+        `${API_URI}/api/deleteAccount`,
         {
           email,
         },

@@ -21,7 +21,7 @@ function Editor({ onLogout }) {
     try{
       await axios
       .post(
-        `${API_URI}/run`,
+        `${API_URI}/api/run`,
         { lang: "cpp", code: userCode, input: userInput },
         {
           withCredentials: true,
@@ -81,6 +81,7 @@ function Editor({ onLogout }) {
         name=""
         id=""
         value={result}
+        //make sure whenever the result is changing the changed value is rendering r not
         cols="30"
         rows="10"
         className="border-2 border-black rounded block"

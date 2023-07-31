@@ -1,10 +1,11 @@
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 import jwt from "jsonwebtoken";
+import { userDetails } from "../models/user.js";
 import dotenv from "dotenv";
 dotenv.config();
 
-export const login = (req, res) => {
+export const login = async (req, res) => {
   const { googleCode } = req.body;
 
   axios
@@ -13,7 +14,8 @@ export const login = (req, res) => {
       client_id:
         "6211912636-or3dqncfo54qkbt2e9835v3oej7lis2j.apps.googleusercontent.com",
       client_secret: "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",
-      redirect_uri: "http://localhost:3000",
+      redirect_uri: "http://localhost:3001",
+      //here in the above url the port was 3000 because for frontend the port was 3000 and for backend it is 8000 but later i changed the port of the backend to 3000 and frontend will run in 3001 , so i was facing the google login error, the error was "network error", then i have changed the port number and it worked. i found the error is occuring in this file by adding the catches for the api call that are made here , initailly ther were not there and the app was crashing and was unable to detect where the error was occuring, try catches and the .catch which follows .then during the returned promise resolution are important
       grant_type: "authorization_code",
     })
     .then((response) => {
@@ -41,15 +43,63 @@ export const login = (req, res) => {
             // httpOnly: true,
           };
           console.log("this is the token ", token);
-          res.cookie("token", token, cookieOptions);
-          res.status(200).json({
-            success: true,
-            message: "Login Successful",
-            email: user.email,
+
+          const savingUser = {
+            username: user.name,
+            useremail: user.email,
+            password: "google login user",
+          };
+
+          saveUserToDatabase(savingUser)
+            .then(() => {
+              // Set the token cookie and send the response to the client
+              res.cookie("token", token, cookieOptions);
+              res.status(200).json({
+                success: true,
+                message: "Login Successful",
+                email: user.email,
+              });
+            })
+            .catch((err) => {
+              console.log(err);
+              res.status(500).json({ msg: "Error saving user details" });
+            });
+
+          // res.cookie("token", token, cookieOptions);
+          // res.status(200).json({
+          //   success: true,
+          //   message: "Login Successful",
+          //   email: user.email,
+          // });
+        })
+        .catch((err) => {
+          console.log(err, "here iam at line 52");
+          res.status(500).json({
+            msg: "error during the api call in the login.js file in the backend--2",
           });
         });
+    })
+    .catch((err) => {
+      console.log(err, "here iam at line 57");
+      res.status(500).json({
+        msg: "error during the api call in the login.js file in the backend--1",
+      });
     });
 };
 
-
-
+async function saveUserToDatabase(savingUser) {
+  const userExists = await userDetails.findOne({
+    useremail: savingUser.useremail,
+  });
+  //With this modification, the function will return a resolved promise with undefined if the user already exists (since there's no further asynchronous operation in this case). If the user does not exist and the saving process is successful, it will return a resolved promise with the result of the saving operation. If the saving process fails, it will return a rejected promise with the error.
+  if (!userExists) {
+    try {
+      const userToSave = new userDetails(savingUser);
+      console.log(userToSave);
+      const result = await userToSave.save();
+      console.log(result);
+    } catch (error) {
+      throw error;
+    }
+  }
+}

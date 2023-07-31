@@ -162,6 +162,9 @@ export const manLogin = async (req, res) => {
   if (!userExists) {
     return res.status(201).json({ msg: "user does not exists, please signup" });
   }
+  if(userExists.password === "google login user"){
+    return res.status(202).json({ msg: "please login with google or create a new password by clicking the forgot pass button" });
+  }
   if (userExists.password !== sha512(password + process.env.SHA_SECRET)) {
     return res.status(202).json({ msg: "password is incorrect" });
   }

@@ -21,10 +21,10 @@ import {
 const router = express.Router();
 //here this forward slash is important, i thought it will be working because we kept one in the server.js file but it is not
 router.post("/login", login);
-router.post("/apiSignUp", signUP);
-router.post("/apiVerifyOTP", verifyOTP);
-router.post("/apiDeleteAccount", deleteAccount);
-router.post("/apiManLogin", manLogin);
+router.post("/signUp", signUP);
+router.post("/verifyOTP", verifyOTP);
+router.post("/deleteAccount", deleteAccount);
+router.post("/manLogin", manLogin);
 router.get("/check", (req, res) => {
   res.json("checked");
 });
