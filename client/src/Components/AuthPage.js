@@ -69,7 +69,7 @@ function AuthPage({ onLogin }) {
       document.getElementById("password").value="";
       return;
     }
-    else{
+    else if(response.status===203){
       alert(response.data.msg);
       return;
     }

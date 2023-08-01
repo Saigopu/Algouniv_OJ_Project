@@ -1,23 +1,23 @@
 import React from "react";
 import axios from "axios";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
+
 const API_URI = "http://localhost:3000";
 function ProblemList({ onLogout }) {
   const navigate = useNavigate();
+  const [problemList, setProblemList] = useState([]);
+
   useEffect(() => {
-    async function check() {
+    async function getList() {
       await axios
-        .post(
-          `${API_URI}/api/problemList`,
-          {},
-          {
-            withCredentials: true,
-          }
-        )
+        .get(`${API_URI}/api/problemList`, {
+          withCredentials: true,
+        })
         .then((res) => {
           console.log(res);
+          setProblemList(res.data);
         })
         .catch((err) => {
           console.log(err, err.response.status);
@@ -25,12 +25,14 @@ function ProblemList({ onLogout }) {
             document.cookie =
               "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
             alert("session expired");
+            onLogout(); //here there may be error, didnt test
             navigate("/");
           }
+          alert(err.response.data.msg);
           //display a proper message and delete the token if present in the cookie and route to the login page
         });
     }
-    check();
+    getList();
   }, []);
 
   async function handleCall() {
@@ -52,6 +54,7 @@ function ProblemList({ onLogout }) {
           document.cookie =
             "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
           alert("session expired");
+          onLogout(); //here there may be error, didnt test
           navigate("/");
         }
         //display a proper message and delete the token if present in the cookie and route to the login page
@@ -59,11 +62,20 @@ function ProblemList({ onLogout }) {
     //here in the request we are sending the right token in the headers as authorisaion but it is not needed, because we have set the withcredential to true means the cookies are sent in the header but all the cookies are sent, we have to find the right one from them in the backend , insted we are finding that here and sending
   }
 
+
   return (
-    <div className="flex gap-14">
-      <Navbar onLogout={onLogout} />
-      <button onClick={handleCall}>call</button>
-    </div>
+    <>
+      <div className="flex gap-14">
+        <Navbar onLogout={onLogout} />
+        <button onClick={handleCall}>call</button>
+      </div>
+      {problemList.map((problem) => (
+        <div key={problem.problemID} className="border-2 border-black">
+          <h1>{problem.name}</h1>
+          <button onClick={()=>{navigate(`/problems/${problem.problemID}`)}}>open</button>
+        </div>
+      ))}
+    </>
   );
 }
 

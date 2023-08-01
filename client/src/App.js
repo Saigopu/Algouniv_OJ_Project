@@ -2,6 +2,7 @@ import "./App.css";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import AuthPage from "./Components/AuthPage.js";
 import ProblemList from "./Components/ProblemList.js";
+import ProblemDetails from "./Components/ProblemDetails.js";
 import { useState, useEffect } from "react";
 import Editor from "./Components/Editor";
 
@@ -57,6 +58,13 @@ function App() {
           element={
             isLogged ? <Editor onLogout={handleLogout} /> : <Navigate to="/" />
           }
+        />
+        {/* the below route is dynamic routing */}
+        {/* <Route path="/problems/:problemID" render={(props) => <ProblemDetails {...props} onLogout={handleLogout}/>} /> */}
+        {/* followed this blog https://blog.webdevsimplified.com/2022-07/react-router/ to solve the issue with the above dynamic route */}
+        <Route
+          path="/problems/:problemID"
+          element={<ProblemDetails onLogout={handleLogout} />}
         />
       </Routes>
     </BrowserRouter>

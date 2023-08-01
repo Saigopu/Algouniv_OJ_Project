@@ -10,6 +10,7 @@ import {
   deleteAccount,
   manLogin,
 } from "../controllers/signUPIN.js";
+import { getProblemList,getFullProblem } from "../controllers/problems.js";
 //this file is for routing, we will map the function with their corresponding routes, but we dont write the functions here we write in some specific folders and import
 
 //this is backend routing, this will be just for api calls. At some locations some methods will be there when user clicks any button which is connected in the frontend to raise the api request from the browser to specific location in the backend then the methods will be executed and the response will be sent, whatever api requests the browser make are not visible to the browser, they are only visible in the networks tab
@@ -29,9 +30,9 @@ router.get("/check", (req, res) => {
   res.json("checked");
 });
 
-router.post("/problemList", validateJwt, (req, res) => {
-  res.send("hello gopi");
-});
+//in the routes where validateJWT is used, dont use 401 status code, because it already used in the validateJWT as the status for the token is unverified so the user will be directed to auth
+router.get("/problemList", validateJwt, getProblemList);
+router.get("/fullProblem", validateJwt, getFullProblem);
 
 router.post("/run", validateJwt, async (req, res) => {
   try {
