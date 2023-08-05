@@ -2,15 +2,19 @@ import express from "express";
 import validateJwt from "../middleware/validateJWT.js";
 
 import { login } from "../controllers/login.js";
-import { generateFile } from "../generateFile.js";
-import { execute } from "../execute.js";
+import { generateFile, generateFileNew } from "../generateFile.js";
+import { execute, expectedOutput, verdict } from "../execute.js";
 import {
   signUP,
   verifyOTP,
   deleteAccount,
   manLogin,
 } from "../controllers/signUPIN.js";
-import { getProblemList,getFullProblem } from "../controllers/problems.js";
+import { getProblemList, getFullProblem } from "../controllers/problems.js";
+import path from "path";
+import { fileURLToPath } from "url";
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
 //this file is for routing, we will map the function with their corresponding routes, but we dont write the functions here we write in some specific folders and import
 
 //this is backend routing, this will be just for api calls. At some locations some methods will be there when user clicks any button which is connected in the frontend to raise the api request from the browser to specific location in the backend then the methods will be executed and the response will be sent, whatever api requests the browser make are not visible to the browser, they are only visible in the networks tab
@@ -44,6 +48,29 @@ router.post("/run", validateJwt, async (req, res) => {
     const output = await execute(filepath, input);
 
     res.json({ filepath, output });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error });
+  }
+});
+router.post("/getExpected", validateJwt, async (req, res) => {
+  try {
+    const { lang = "cpp", problemID, input } = req.body;
+    const output = await expectedOutput(problemID, input);
+
+    res.json({ output });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error });
+  }
+});
+router.post("/getVerdict", validateJwt, async (req, res) => {
+  try {
+    const { lang = "cpp", problemID, code } = req.body;
+    //use the lang later
+    
+    const filepath = await generateFileNew(lang, code, "submittedCodes");
+    const output = await verdict(filepath, problemID);
+
+    res.json({ output });
   } catch (error) {
     res.status(500).json({ success: false, error: error });
   }

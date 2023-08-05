@@ -70,9 +70,9 @@ function ProblemList({ onLogout }) {
         <button onClick={handleCall}>call</button>
       </div>
       {problemList.map((problem) => (
-        <div key={problem.problemID} className="border-2 border-black">
+        <div key={problem.problemID} className="border-2 border-black flex m-3 p-3 gap-60 rounded">
           <h1>{problem.name}</h1>
-          <button onClick={()=>{navigate(`/problems/${problem.problemID}`)}}>open</button>
+          <button className="border-2 border-black font-bold rounded" onClick={()=>{navigate(`/problems/${problem.problemID}`)}}>open</button>
         </div>
       ))}
     </>
