@@ -145,7 +145,8 @@ export const verdict = async (filepath, problemID) => {
         input: testcases['input'][i],
       }).toString();
       if (smoothString(output) != testcases['output'][i]) {
-        reject(`wrong answer at testcase ${i + 1}, ${output.error || output}`);
+        // reject(`wrong answer at testcase ${i + 1}, ${output.error || output}`);
+        reject(`wrong answer at testcase ${i + 1}`);
       }
       i++;
     }

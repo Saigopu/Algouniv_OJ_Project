@@ -23,14 +23,16 @@ function App() {
     //state update in react is asynchronous, the remaining part is executed even before the state is updated, so we have to hold the control flow at proper places for the desired behavior of the app
   }
 
-  function handleLogin() {
+  function handleLogin(email) {
     setIsLogged(true);
     sessionStorage.setItem("token", "your_token_here");
+    sessionStorage.setItem("email",email)
   }
 
   function handleLogout() {
     setIsLogged(false);
     sessionStorage.removeItem("token");
+    sessionStorage.removeItem("email");
   }
 
   if (isLoading) {

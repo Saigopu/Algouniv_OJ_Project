@@ -29,7 +29,7 @@ function AuthPage({ onLogin }) {
       console.log(response.data);
       console.log(response.status);
       console.log(response.headers);
-      onLogin();
+      onLogin(response.data.email);
       navigate("/problemList");
     }
     catch(err){
@@ -73,7 +73,7 @@ function AuthPage({ onLogin }) {
       alert(response.data.msg);
       return;
     }
-    onLogin();
+    onLogin(document.getElementById("email").value);
     navigate("/problemList");
   }
 

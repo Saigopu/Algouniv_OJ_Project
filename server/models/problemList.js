@@ -6,7 +6,7 @@ const problemSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  problemsID: {
+  problemID: {
     type: mongoose.Schema.Types.Number,
     required: true,
   },
@@ -17,7 +17,7 @@ const fullProblemSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  problemsID: {
+  problemID: {
     type: mongoose.Schema.Types.Number,
     required: true,
   },
@@ -38,12 +38,12 @@ const fullProblemSchema = new mongoose.Schema({
   //     required: true,
   // },
   sampleInput: {
-    type: String,
+    type: [String],
     //here we can put the array of strings, as of know giving only one sample input
     required: true,
   },
   sampleOutput: {
-    type: String,
+    type: [String],
     required: true,
   },
   // explanation: {
@@ -92,13 +92,17 @@ const submittedFilesSchema= new mongoose.Schema({
     type: mongoose.Schema.Types.Number,
     required:true,
   },
-  filePaths:{
+  filePathSubmit:{
     type:[String],
     required:true,
   },
   filePathRunner:{
-    type:[String],
+    type:String,
     required:true,
+  },
+  verdicts:{
+    type:[String],
+    required:true
   }
 })
 export const submittedFiles=mongoose.model("submittedFiles",submittedFilesSchema);

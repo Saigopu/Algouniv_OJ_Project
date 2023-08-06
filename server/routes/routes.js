@@ -2,7 +2,7 @@ import express from "express";
 import validateJwt from "../middleware/validateJWT.js";
 
 import { login } from "../controllers/login.js";
-import { generateFile, generateFileNew } from "../generateFile.js";
+import { generateSubmittedFile, copyCodeToFile } from "../generateFile.js";
 import { execute, expectedOutput, verdict } from "../execute.js";
 import {
   signUP,
@@ -11,6 +11,7 @@ import {
   manLogin,
 } from "../controllers/signUPIN.js";
 import { getProblemList, getFullProblem } from "../controllers/problems.js";
+import { submittedFiles } from "../models/problemList.js";
 import path from "path";
 import { fileURLToPath } from "url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -40,16 +41,23 @@ router.get("/fullProblem", validateJwt, getFullProblem);
 
 router.post("/run", validateJwt, async (req, res) => {
   try {
-    const { lang = "cpp", code, input } = req.body;
+    const { lang = "cpp", code, input, email, problemID } = req.body;
     if (code === undefined) {
       res.status(404).json({ success: false, error: "empty code" });
     }
-    const filepath = await generateFile(lang, code);
+    // const filepath = await generateFile(lang, code);
+    const filepath = await copyCodeToFile(
+      lang,
+      code,
+      email,
+      problemID,
+      "runnerCodes"
+    );
     const output = await execute(filepath, input);
 
     res.json({ filepath, output });
   } catch (error) {
-    res.status(500).json({ success: false, error: error });
+    res.status(500).json({ success: false, msg: error });
   }
 });
 router.post("/getExpected", validateJwt, async (req, res) => {
@@ -59,20 +67,37 @@ router.post("/getExpected", validateJwt, async (req, res) => {
 
     res.json({ output });
   } catch (error) {
-    res.status(500).json({ success: false, error: error });
+    res.status(500).json({ success: false, msg: `${error},some error in the backend` });
   }
 });
 router.post("/getVerdict", validateJwt, async (req, res) => {
   try {
-    const { lang = "cpp", problemID, code } = req.body;
+    const { lang = "cpp", problemID, code, email } = req.body;
     //use the lang later
-    
-    const filepath = await generateFileNew(lang, code, "submittedCodes");
+
+    const filepath = await generateSubmittedFile(
+      lang,
+      code,
+      email,
+      problemID,
+      "submittedCodes"
+    );
     const output = await verdict(filepath, problemID);
+    const filePathObject = await submittedFiles.updateOne(
+      {
+        useremail: email,
+        problemID: problemID,
+      },
+      {
+        $push: { verdicts: output },
+      },
+      { new: true }
+    );
+    //if code execution come till here then there will be definitely the object in the db with the email and problemID, assuming this
 
     res.json({ output });
   } catch (error) {
-    res.status(500).json({ success: false, error: error });
+    res.status(500).json({ success: false, msg: error });
   }
 });
 

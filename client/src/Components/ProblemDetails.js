@@ -15,7 +15,7 @@ const ProblemDetails = ({ onLogout }) => {
   const [showResults, setShowResults] = useState(false);
   const [showInput, setShowInput] = useState(true);
   const [showInpRes, setShowInpRes] = useState(false);
-  const [problemDetails, setProblemDetails] = useState([]);
+  const [problemDetails, setProblemDetails] = useState(null);
   const { problemID } = useParams();
   // const problem = problems.find((p) => p.id === id);
   useEffect(() => {
@@ -24,12 +24,15 @@ const ProblemDetails = ({ onLogout }) => {
         .get(`${API_URI}/api/fullProblem`, {
           params: {
             problemID: problemID,
+            email: sessionStorage.getItem("email"),
           },
           withCredentials: true,
         })
         .then((res) => {
           console.log(res);
-          setProblemDetails(res.data);
+          setProblemDetails(res.data.fullProblemDoc);
+          setUserCode(res.data.latestCode);
+          setUserInput(res.data.fullProblemDoc.sampleInput[0]);
         })
         .catch((err) => {
           console.log(err, err.response.status);
@@ -54,7 +57,13 @@ const ProblemDetails = ({ onLogout }) => {
       await axios
         .post(
           `${API_URI}/api/run`,
-          { lang: "cpp", code: userCode, input: userInput },
+          {
+            lang: "cpp",
+            code: userCode,
+            input: userInput,
+            email: sessionStorage.getItem("email"),
+            problemID: problemID,
+          },
           {
             withCredentials: true,
           }
@@ -132,6 +141,8 @@ const ProblemDetails = ({ onLogout }) => {
             lang: "cpp",
             problemID: problemID,
             code: userCode,
+            email: sessionStorage.getItem("email"),
+            problemID: problemID,
           },
           {
             withCredentials: true,
@@ -159,47 +170,58 @@ const ProblemDetails = ({ onLogout }) => {
   }
 
   if (!problemDetails) {
-    return <div>Problem not found!</div>;
+    // return <div>Problem not found!</div>;
+    return <div>Loading</div>;
   }
-
+  // console.log(problemDetails,!problemDetails,problemDetails==={});
   return (
-    <div className="flex flex-wrap h-screen p-2">
+    // in the below div removed p-2 which is creating problem by adding a scroller to the whole page
+    <div className="flex flex-wrap h-screen ">
       {/* Left Half: Question Details */}
       {/* In flexbox, when the height of a flex container is set, and the flex items inside the container do not have an explicitly defined height, they will automatically stretch to fill the available vertical space.
 
 To achieve the desired layout where the first inner div only takes the height necessary to contain its content, you can add the flex-shrink-0 class to the first inner div. The flex-shrink-0 class prevents the flex item from shrinking when there's not enough space. */}
-      <div className="w-full md:w-1/2 bg-white p-6 shadow-md rounded-md">
+      <div className="w-full md:w-1/2 bg-white p-6 pt-2 shadow-md rounded-md overflow-y-auto h-screen">
+        
         <h1 className="text-2xl font-bold mb-4">{problemDetails.name}</h1>
         <div className="problem-description mb-6">
           <h2 className="text-lg font-semibold mb-2">Problem Description</h2>
           <p>{problemDetails.problemStatement}</p>
         </div>
-        {/* <div className="input-output-examples mb-6">
-          <h2 className="text-lg font-semibold mb-2">Input Examples</h2>
+        
+        <div className="mb-6">
+          <h2 className="text-lg font-semibold mb-2">Input Format</h2>
+          <p>{problemDetails.inputFormat}</p>
+          <h2 className="text-lg font-semibold mb-2">Output Format</h2>
+          <p>{problemDetails.outputFormat}</p>
+        </div>
+        <div className="input-output-examples mb-6">
+          <h2 className="text-lg font-semibold mb-2">Sample Inputs</h2>
           <ul>
-            {inputExamples.map((input, index) => (
+            {problemDetails["sampleInput"].map((input, index) => (
               <li key={index} className="mb-2">
                 <pre className="bg-gray-100 p-2 rounded">{input}</pre>
               </li>
             ))}
           </ul>
-          <h2 className="text-lg font-semibold mb-2">Output Examples</h2>
+          <h2 className="text-lg font-semibold mb-2">Sample Outputs</h2>
           <ul>
-            {outputExamples.map((output, index) => (
+            {problemDetails["sampleOutput"].map((output, index) => (
               <li key={index} className="mb-2">
                 <pre className="bg-gray-100 p-2 rounded">{output}</pre>
               </li>
             ))}
           </ul>
-        </div> */}
+        </div>
       </div>
 
       {/* Right Half: Code Editor and Input/Output */}
-      <div className="w-full md:w-1/2 pl-5 pt-3 border-2 border-black flex flex-col">
+      <div className="w-full md:w-1/2 pl-2 pt-2 pr-1 flex flex-col">
         {/* <div className=" h-full flex flex-col border-2 border-black"> */}
-        <div className="flex-grow mb-4 border-2 border-black ">
+        <div className="flex-grow mb-3  ">
           <textarea
             className="w-full h-full border border-gray-300 rounded p-2 resize-none"
+            value={userCode}
             onChange={(e) => {
               setUserCode(e.target.value);
             }}
@@ -208,7 +230,7 @@ To achieve the desired layout where the first inner div only takes the height ne
         </div>
         {/* in the below classname removed flex-col flex-1 */}
         {showInpRes && (
-          <div className="border-2 border-black mb-4">
+          <div className=" mb-4">
             <ul className="flex bg-gray-100 p-2 rounded">
               <li className="mr-2">
                 <button
@@ -250,14 +272,14 @@ To achieve the desired layout where the first inner div only takes the height ne
                   setUserInput(e.target.value);
                 }}
                 value={userInput}
-                // defaultValue={problemDetails.sampleInput}
+                // defaultValue={problemDetails['sampleInput'][0]}
                 placeholder="Input"
               />
             )}
           </div>
         )}
 
-        <div className="flex-grow-0 h-9 border-2 border-black">
+        <div className="flex-grow-0 h-12 ">
           <button
             className="bg-blue-500 text-white hover:bg-blue-600 px-4 py-1 rounded mr-2"
             onClick={() => {
