@@ -240,16 +240,18 @@ function AuthPage({ onLogin }) {
                 placeholder="Name"
                 className="border-2 border-black"
                 disabled={showOTP}
+                required
               />
             </div>
             <div>
               <label htmlFor="signupEmail">Email:</label>
               <input
                 id="signupEmail"
-                type="text"
+                type="email"
                 placeholder="Email"
                 className="border-2 border-black"
                 disabled={showOTP}
+                required
               />
             </div>
             <div>
@@ -260,6 +262,7 @@ function AuthPage({ onLogin }) {
                 placeholder="Password"
                 className="border-2 border-black"
                 disabled={showOTP}
+                required
               />
             </div>
             {!showOTP && (

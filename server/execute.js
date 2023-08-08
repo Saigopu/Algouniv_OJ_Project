@@ -122,29 +122,30 @@ export const verdict = async (filepath, problemID) => {
   const jobId = path.basename(filepath).split(".")[0];
   const outPath = path.join(outputPath, `${jobId}.exe`);
   //fetch the testcases of the problem problemID from mongo
+  console.log(typeof problemID, problemID, "in verdict function of execute.js")
   const testcases = await testCases.findOne({ problemID: problemID });
   console.log(testcases);
   return new Promise((resolve, reject) => {
     //the code present here looks redundant, so have to do something to remove this
     let output = "";
     const commandCompile = `g++ "${filepath}" -o "${outPath}"`;
-    console.log(filepath, outPath,)
+    console.log(filepath, outPath);
 
     try {
       execSync(commandCompile);
     } catch (err) {
       reject(err);
     }
-    let t = testcases['input'].length;
+    let t = testcases["input"].length;
     console.log(t);
     let i = 0;
     while (t--) {
       const command = `cd "${outputPath}" && ${jobId}.exe`;
       const commandWithOptions = `cmd /s /c "${command}"`;
       const output = execSync(commandWithOptions, {
-        input: testcases['input'][i],
+        input: testcases["input"][i],
       }).toString();
-      if (smoothString(output) != testcases['output'][i]) {
+      if (smoothString(output) != testcases["output"][i]) {
         // reject(`wrong answer at testcase ${i + 1}, ${output.error || output}`);
         reject(`wrong answer at testcase ${i + 1}`);
       }
