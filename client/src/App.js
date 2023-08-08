@@ -3,8 +3,9 @@ import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import AuthPage from "./Components/AuthPage.js";
 import ProblemList from "./Components/ProblemList.js";
 import ProblemDetails from "./Components/ProblemDetails.js";
+import Colab from "./Components/Colab.js";
 import { useState, useEffect } from "react";
-import Editor from "./Components/Editor";
+import Profile from "./Components/Profile";
 
 function App() {
   const [isLogged, setIsLogged] = useState(false);
@@ -56,9 +57,9 @@ function App() {
           }
         />
         <Route
-          path="/editor"
+          path="/profile"
           element={
-            isLogged ? <Editor onLogout={handleLogout} /> : <Navigate to="/" />
+            isLogged ? <Profile onLogout={handleLogout} /> : <Navigate to="/" />
           }
         />
         {/* the below route is dynamic routing */}
@@ -67,6 +68,10 @@ function App() {
         <Route
           path="/problems/:problemID"
           element={<ProblemDetails onLogout={handleLogout} />}
+        />
+        <Route
+          path="/colab"
+          element={<Colab onLogout={handleLogout} />}
         />
       </Routes>
     </BrowserRouter>

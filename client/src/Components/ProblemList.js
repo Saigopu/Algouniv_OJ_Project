@@ -7,7 +7,7 @@ import Navbar from "./Navbar";
 const API_URI = "http://localhost:3000";
 function ProblemList({ onLogout }) {
   const navigate = useNavigate();
-  const [problemList, setProblemList] = useState([]);
+  const [problemList, setProblemList] = useState(null);
 
   useEffect(() => {
     async function getList() {
@@ -62,17 +62,27 @@ function ProblemList({ onLogout }) {
     //here in the request we are sending the right token in the headers as authorisaion but it is not needed, because we have set the withcredential to true means the cookies are sent in the header but all the cookies are sent, we have to find the right one from them in the backend , insted we are finding that here and sending
   }
 
+  if (!problemList) return <div>Loading...</div>;
 
   return (
     <>
-      <div className="flex gap-14">
-        <Navbar onLogout={onLogout} />
-        <button onClick={handleCall}>call</button>
-      </div>
+      <Navbar />
+      {/* <button onClick={handleCall}>call</button> */}
+
       {problemList.map((problem) => (
-        <div key={problem.problemID} className="border-2 border-black flex m-3 p-3 gap-60 rounded">
-          <h1>{problem.name}</h1>
-          <button className="border-2 border-black font-bold rounded" onClick={()=>{navigate(`/problems/${problem.problemID}`)}}>open</button>
+        <div
+          key={problem.problemID}
+          className="border-2 border-black flex m-3 p-3 rounded"
+        >
+          <h1 className="flex-grow">{problem.name}</h1>
+          <button
+            className="border-2 border-black font-bold rounded flex-grow-0"
+            onClick={() => {
+              navigate(`/problems/${problem.problemID}`);
+            }}
+          >
+            open
+          </button>
         </div>
       ))}
     </>

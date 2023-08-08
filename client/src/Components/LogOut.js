@@ -9,8 +9,8 @@ function LogOut({onLogout}) {
     navigate("/");
   }
   return (
-    <div>
-      <button onClick={handleLogout}>log out</button>
+    <div >
+      <button onClick={handleLogout}>Sign Out</button>
     </div>
   );
 }

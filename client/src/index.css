@@ -15,3 +15,10 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 } */
+
+.active{
+  /* this is meaningfull if we use he NavLink before the routes */
+  /* color:blue; */
+  text-decoration: underline;
+  /* font-weight: bold; */
+}
