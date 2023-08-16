@@ -21,63 +21,63 @@ export const generateFile = async (format, content) => {
 };
 */
 
-export const generateSubmittedFile = async (
-  format,
-  content,
-  email,
-  problemID,
-  directoryName
-) => {
-  const dirCodes = path.join(__dirname, directoryName);
-  if (!fs.existsSync(dirCodes)) {
-    fs.mkdirSync(dirCodes, { recursive: true });
-  }
-  const jobId = uuidv4();
-  const fileName = `${jobId}.${format}`;
-  const filePath = path.join(dirCodes, fileName);
-  const filePathObject = await submittedFiles.findOne({
-    useremail: email,
-    problemID: problemID,
-  });
-  await fs.writeFileSync(filePath, content);
-  if (!filePathObject) {
-    const userToSave = new submittedFiles({
-      useremail: email,
-      problemID: problemID,
-      filePathSubmit: [filePath],
-    });
-    await userToSave
-      .save()
-      .then((result) => {
-        console.log(result);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+// export const generateSubmittedFile = async (
+//   format,
+//   content,
+//   email,
+//   problemID,
+//   directoryName
+// ) => {
+//   const dirCodes = path.join(__dirname, directoryName);
+//   if (!fs.existsSync(dirCodes)) {
+//     fs.mkdirSync(dirCodes, { recursive: true });
+//   }
+//   const jobId = uuidv4();
+//   const fileName = `${jobId}.${format}`;
+//   const filePath = path.join(dirCodes, fileName);
+//   const filePathObject = await submittedFiles.findOne({
+//     useremail: email,
+//     problemID: problemID,
+//   });
+//   await fs.writeFileSync(filePath, content);
+//   if (!filePathObject) {
+//     const userToSave = new submittedFiles({
+//       useremail: email,
+//       problemID: problemID,
+//       filePathSubmit: [filePath],
+//     });
+//     await userToSave
+//       .save()
+//       .then((result) => {
+//         console.log(result);
+//       })
+//       .catch((err) => {
+//         console.log(err);
+//       });
 
-    return filePath;
-  } else {
-    //i think the below if block is not needed lets see later
-    if (!filePathObject["filePathSubmit"]) {
-      const updatedFilePathsData = await submittedFiles.findByIdAndUpdate(
-        filePathObject._id, // Find by the document's _id
-        {
-          $set: { filePathRunner: [filePath] },
-        },
-        { new: true } // Set 'new' option to true to get the updated document
-      );
-      return filePath;
-    }
-    const updatedFilePathsData = await submittedFiles.findByIdAndUpdate(
-      filePathObject._id,
-      {
-        $push: { filePathSubmit: filePath },
-      },
-      { new: true }
-    );
-    return filePath;
-  }
-};
+//     return filePath;
+//   } else {
+//     //i think the below if block is not needed lets see later
+//     if (!filePathObject["filePathSubmit"]) {
+//       const updatedFilePathsData = await submittedFiles.findByIdAndUpdate(
+//         filePathObject._id, // Find by the document's _id
+//         {
+//           $set: { filePathRunner: [filePath] },
+//         },
+//         { new: true } // Set 'new' option to true to get the updated document
+//       );
+//       return filePath;
+//     }
+//     const updatedFilePathsData = await submittedFiles.findByIdAndUpdate(
+//       filePathObject._id,
+//       {
+//         $push: { filePathSubmit: filePath },
+//       },
+//       { new: true }
+//     );
+//     return filePath;
+//   }
+// };
 
 export const copyCodeToFile = async (
   format,
@@ -95,10 +95,10 @@ export const copyCodeToFile = async (
     useremail: email,
     problemID: problemID,
   });
+  const jobId = `${email}_${problemID}`;
+  const fileName = `${jobId}.${format}`;
+  const filePath = path.join(dirCodes, fileName);
   if (!filePathObject) {
-    const jobId = `${email}_${problemID}.${format}`;
-    const fileName = `${jobId}.${format}`;
-    const filePath = path.join(dirCodes, fileName);
     const userToSave = new submittedFiles({
       useremail: email,
       problemID: problemID,
@@ -116,9 +116,9 @@ export const copyCodeToFile = async (
     return filePath;
   } else {
     if (!filePathObject["filePathRunner"]) {
-      const jobId = `${email}_${problemID}.${format}`;
-      const fileName = `${jobId}.${format}`;
-      const filePath = path.join(dirCodes, fileName);
+      // const jobId = `${email}_${problemID}.${format}`;
+      // const fileName = `${jobId}.${format}`;
+      // const filePath = path.join(dirCodes, fileName);
       const updatedUserData = await submittedFiles.findByIdAndUpdate(
         filePathObject._id, // Find by the document's _id
         {

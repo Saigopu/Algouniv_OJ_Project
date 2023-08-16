@@ -92,18 +92,10 @@ const submittedFilesSchema= new mongoose.Schema({
     type: mongoose.Schema.Types.Number,
     required:true,
   },
-  filePathSubmit:{
-    type:[String],
-    required:true,
-  },
   filePathRunner:{
     type:String,
     required:true,
   },
-  verdicts:{
-    type:[String],
-    required:true
-  }
 })
 export const submittedFiles=mongoose.model("submittedFiles",submittedFilesSchema);
 export const testCases = mongoose.model("testCases", testCasesSchema);

@@ -24,7 +24,7 @@ export const getFullProblem = async (req, res) => {
   try {
     // const { problemID, email } = req.params;//this worked when there only one field that is problemID
     const { problemID, email } = req.query;
-    console.log(problemID, email,req.params);
+    console.log(problemID, email, req.params);
     const fullProblemDoc = await fullProblem.findOne({
       problemID: problemID,
     });
@@ -38,33 +38,18 @@ export const getFullProblem = async (req, res) => {
       useremail: email,
       problemID: problemID,
     });
-    console.log(filePathObject)
+    console.log(filePathObject);
     let latestCode;
     if (filePathObject) {
       if (
-        filePathObject['filePathRunner'] &&
-        fs.existsSync(filePathObject['filePathRunner'])
+        filePathObject["filePathRunner"] &&
+        fs.existsSync(filePathObject["filePathRunner"])
       ) {
-        latestCode = fs.readFileSync(
-          filePathObject['filePathRunner']
-        ).toString();
+        latestCode = fs
+          .readFileSync(filePathObject["filePathRunner"])
+          .toString();
         // console.log(fullProblemDoc['latestCode']);
-      } else if (
-        filePathObject['filePathSubmit'] &&
-        filePathObject['filePathSubmit'].length > 0 &&
-        fs.existsSync(
-          filePathObject['filePathSubmit'][
-            filePathObject['filePathSubmit'].length - 1
-          ]
-        )
-      ) {
-        latestCode = fs.readFileSync(
-          filePathObject['filePathSubmit'][
-            filePathObject['filePathSubmit'].length - 1
-          ]
-        ).toString();
-      }
-      else{
+      } else {
         latestCode = "";
       }
     }

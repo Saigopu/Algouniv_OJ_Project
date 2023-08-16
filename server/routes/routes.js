@@ -2,7 +2,7 @@ import express from "express";
 import validateJwt from "../middleware/validateJWT.js";
 
 import { login } from "../controllers/login.js";
-import { generateSubmittedFile, copyCodeToFile } from "../generateFile.js";
+import {  copyCodeToFile } from "../generateFile.js";
 import { execute, expectedOutput, verdict } from "../execute.js";
 import {
   signUP,
@@ -53,6 +53,7 @@ router.post("/run", validateJwt, async (req, res) => {
       problemID,
       "runnerCodes"
     );
+    console.log("filepath in the route.js ",filepath)
     const output = await execute(filepath, input);
 
     res.json({ filepath, output });
@@ -75,24 +76,24 @@ router.post("/getVerdict", validateJwt, async (req, res) => {
     const { lang = "cpp", problemID, code, email } = req.body;
     //use the lang later
 
-    const filepath = await generateSubmittedFile(
+    const filepath = await copyCodeToFile(
       lang,
       code,
       email,
       problemID,
-      "submittedCodes"
+      "runnerCodes"
     );
     const output = await verdict(filepath, problemID);
-    const filePathObject = await submittedFiles.updateOne(
-      {
-        useremail: email,
-        problemID: problemID,
-      },
-      {
-        $push: { verdicts: output },
-      },
-      { new: true }
-    );
+    // const filePathObject = await submittedFiles.updateOne(
+    //   {
+    //     useremail: email,
+    //     problemID: problemID,
+    //   },
+    //   {
+    //     $push: { verdicts: output },
+    //   },
+    //   { new: true }
+    // );
     //if code execution come till here then there will be definitely the object in the db with the email and problemID, assuming this
 
     res.json({ output });

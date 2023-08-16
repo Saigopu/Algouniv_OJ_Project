@@ -10,7 +10,8 @@ import { testCases } from "./models/problemList.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-const outputPath = path.join(__dirname, "outputs");
+const outputPath = path.join(__dirname, "runnerCodes");
+//initially here the directory was outputs
 if (!fs.existsSync(outputPath)) {
   fs.mkdirSync(outputPath, { recursive: true });
 }
@@ -32,8 +33,9 @@ const smoothString = (str) => {
 export const execute = (filepath, input) => {
   //C:\Users\GOPI KRISHNA\OneDrive\Documents\algodev\Online_Judge\server\codes\c23f7f0a-d29d-4ece-812a-79298be9d697.cpp
   console.log(filepath);
-  const jobId = path.basename(filepath).split(".")[0];
-
+  let jobId = path.basename(filepath).split(".")[0]+"."+path.basename(filepath).split(".")[1]
+  console.log("the jobid in execute.js in the execute method first ",path.basename(filepath).split(".")[0]+"."+path.basename(filepath).split(".")[1])
+  console.log("the jobid in execute.js in the execute method second ",jobId)
   const outPath = path.join(outputPath, `${jobId}.exe`);
   console.log(outPath);
   //${filepath} wrapped that in double inverted commas so that if the spaces are present in the filepath then they are ignored otherwise the parts of the filepath which are separated by space will be considered as different commands
@@ -119,7 +121,7 @@ export const expectedOutput = (problemID, input) => {
 };
 
 export const verdict = async (filepath, problemID) => {
-  const jobId = path.basename(filepath).split(".")[0];
+  let jobId = path.basename(filepath).split(".")[0]+"."+path.basename(filepath).split(".")[1]
   const outPath = path.join(outputPath, `${jobId}.exe`);
   //fetch the testcases of the problem problemID from mongo
   console.log(typeof problemID, problemID, "in verdict function of execute.js")

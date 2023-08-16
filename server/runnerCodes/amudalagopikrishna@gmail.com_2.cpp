@@ -1,3 +1,13 @@
+// this is the solution which we will be using to get the expected output when user clicks run button
+
+// this solution is for the problem find the element that appears once in an array where every other element appears twice
+
+/*
+complexity
+time: O(n)
+space: O(1)
+*/
+
 #include <bits/stdc++.h>
 using namespace std;
 

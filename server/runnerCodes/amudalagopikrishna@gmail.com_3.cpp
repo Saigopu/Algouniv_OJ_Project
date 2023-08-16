@@ -1,3 +1,11 @@
+//this the solution for the problem three sum
+
+/*
+complexity
+time: O(n^2)
+space: O(1)
+*/
+
 #include<bits/stdc++.h>
 using namespace std;
 
