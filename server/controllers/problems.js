@@ -1,3 +1,5 @@
+//this file is fine with error handling where we are sending the status code of 500 
+
 import { problemList, fullProblem } from "../models/problemList.js";
 import { submittedFiles } from "../models/problemList.js";
 import fs from "fs";
@@ -16,7 +18,7 @@ export const getProblemList = async (req, res) => {
     return res.json(problemListDocs);
   } catch (error) {
     console.error("Error while fetching problemList documents:", error);
-    return res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ msg: "Internal server error, try again" });
   }
 };
 
@@ -56,6 +58,6 @@ export const getFullProblem = async (req, res) => {
     return res.json({ fullProblemDoc, latestCode });
   } catch (error) {
     console.error("Error while fetching fullProblem documents:", error);
-    return res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ msg: "Internal server error, try again" });
   }
 };

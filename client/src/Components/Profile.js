@@ -1,3 +1,5 @@
+//this file is fine with error handling
+//there in only one api call in this file(get)
 import React from "react";
 import Navbar from "./Navbar";
 import LogOut from "./LogOut";

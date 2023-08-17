@@ -1,4 +1,5 @@
-// ProblemDetails.js
+// this file is fine with error handling
+// there are three functions where api calls are being made and in those two functions have double layer of error handling, it was done like that because there was no error handling at the backend so there was no response from the backend in some cases, now atleast we get the response
 import axios from "axios";
 import Navbar from "./Navbar";
 import { useState, useEffect } from "react";

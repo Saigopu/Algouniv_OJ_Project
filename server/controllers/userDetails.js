@@ -1,7 +1,11 @@
+// this file is fine with error handling, status code 500
+// this file is used to get the profile details of the user
+
 import { userDetails } from "../models/user.js";
 import { submittedFiles } from "../models/problemList.js";
 
 export const getUserDetails = async (req, res) => {
+ try{
   const { email } = req.query; //this worked when there only one field that is problemID
   console.log("in userDetail.js file in server ", email);
 
@@ -25,4 +29,8 @@ export const getUserDetails = async (req, res) => {
     problemsSolved: solvedProblems,
     picture: userDoc.picture,
   });
+ }
+ catch(err){
+  return res.status(500).json({ msg: "Internal server error, try again" });
+ }
 };

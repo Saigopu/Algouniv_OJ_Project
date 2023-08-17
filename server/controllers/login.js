@@ -1,3 +1,5 @@
+//i think this file is fine with the error handling, status code 500
+
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 import jwt from "jsonwebtoken";
@@ -57,7 +59,7 @@ export const login = async (req, res) => {
               res.cookie("token", token, cookieOptions);
               res.status(200).json({
                 success: true,
-                message: "Login Successful",
+                msg: "Login Successful",
                 email: user.email,
               });
             })
@@ -76,14 +78,14 @@ export const login = async (req, res) => {
         .catch((err) => {
           console.log(err, "here iam at line 52");
           res.status(500).json({
-            msg: "error during the api call in the login.js file in the backend--2",
+            msg: "error during the api call in the login.js file in the backend--2, try again",
           });
         });
     })
     .catch((err) => {
       console.log(err, "here iam at line 57");
       res.status(500).json({
-        msg: "error during the api call in the login.js file in the backend--1",
+        msg: "error during the api call in the login.js file in the backend--1, try again",
       });
     });
 };

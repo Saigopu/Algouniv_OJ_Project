@@ -1,3 +1,5 @@
+//this file is fine with error handling, status code 500
+
 //this file is linked with the editor and the problemDetails files in the client side, this file is used to compile the code and run the code and return the output to the client side
 
 import { exec, spawn, execSync } from "child_process";
@@ -48,7 +50,8 @@ export const execute = (filepath, input) => {
   console.log(outPath);
   //${filepath} wrapped that in double inverted commas so that if the spaces are present in the filepath then they are ignored otherwise the parts of the filepath which are separated by space will be considered as different commands
   return new Promise((resolve, reject) => {
-    // exec(`g++ "${filepath}" -o "${outPath}" && cd "${outputPath}" && .\\${jobId}.exe`,(error,stdout,stderr)=>{
+    try{
+      // exec(`g++ "${filepath}" -o "${outPath}" && cd "${outputPath}" && .\\${jobId}.exe`,(error,stdout,stderr)=>{
     //     if(error){
     //         reject({error,stderr})
     //     }
@@ -87,6 +90,10 @@ export const execute = (filepath, input) => {
         );
       }
     });
+    }
+    catch(err){
+      reject(`internal server error, ${err}, try again`);
+    }
   });
 };
 
@@ -96,7 +103,8 @@ export const expectedOutput = (problemID, input) => {
   const filepath = path.join(expectedOutputPath, `${jobId}.cpp`);
   console.log("this is the expected output path ", expectedOutputPath);
   return new Promise((resolve, reject) => {
-    //the code present here looks redundant, so have to do something to remove this
+    try{
+      //the code present here looks redundant, so have to do something to remove this
     let output = "";
     /* const command = `g++ "${filepath}" -o "${outPath}" && cd "${expectedOutputPath}" && .\\${jobId}.exe`;
     here the error was the .\\problemID.exe is not recognised as internal or external command then tried replacing the cmd.exe in spawn with command then it worked but the arguments /s /c has no sense in keeping actually they are for cmd.exe where /s is for suppressing the special characters as the part of the strings and /c is for closing the shell after the use, so changed the command to the final present one where it is working as expected and the arguments are applied to cmd.
@@ -125,6 +133,10 @@ export const expectedOutput = (problemID, input) => {
         );
       }
     });
+    }
+    catch(err){
+      reject(`internal server error, ${err}, try again`)
+    }
   });
 };
 
@@ -139,7 +151,8 @@ export const verdict = async (filepath, problemID) => {
   const testcases = await testCases.findOne({ problemID: problemID });
   console.log(testcases);
   return new Promise((resolve, reject) => {
-    //the code present here looks redundant, so have to do something to remove this
+    try{
+      //the code present here looks redundant, so have to do something to remove this
     let output = "";
     const commandCompile = `g++ "${filepath}" -o "${outPath}"`;
     console.log(filepath, outPath);
@@ -166,5 +179,9 @@ export const verdict = async (filepath, problemID) => {
     }
     console.log("all testcases passed in verdict function of execute.js");
     resolve("Accepted");
+    }
+    catch(err){
+      reject(`internal server error, ${err}, try again`)
+    }
   });
 };

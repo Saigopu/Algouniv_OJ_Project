@@ -1,3 +1,5 @@
+//this file is fine with error handling
+
 import React, { useState } from "react";
 import jwt_decode from "jwt-decode";
 import { useGoogleLogin } from "@react-oauth/google";
@@ -15,7 +17,7 @@ function AuthPage({ onLogin }) {
     console.log(codeResponse);
     const code = codeResponse.code;
 
-    try{
+    try {
       const response = await axios.post(
         `${API_URI}/api/login`,
         {
@@ -31,11 +33,11 @@ function AuthPage({ onLogin }) {
       console.log(response.headers);
       onLogin(response.data.email);
       navigate("/problemList");
-    }
-    catch(err){
+    } catch (err) {
       console.log(err);
-      if(err.response.status===500){
+      if (err.response.status === 500) {
         console.log(err.response.data.msg);
+        alert("some internal server error, please try again");
       }
     }
   }
@@ -44,37 +46,39 @@ function AuthPage({ onLogin }) {
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
 
-    const response = await axios.post(
-      `${API_URI}/api/manLogin`,
-      {
-        email,
-        password,
-      },
-      {
-        withCredentials: true,
+    try {
+      const response = await axios.post(
+        `${API_URI}/api/manLogin`,
+        {
+          email,
+          password,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+      console.log(response);
+      console.log(response.data);
+      console.log(response.status);
+      console.log(response.headers);
+      if (response.status === 201) {
+        alert(response.data.msg);
+        document.getElementById("email").value = "";
+        document.getElementById("password").value = "";
+        return;
+      } else if (response.status === 202) {
+        alert(response.data.msg);
+        document.getElementById("password").value = "";
+        return;
+      } else if (response.status === 203) {
+        alert(response.data.msg);
+        return;
       }
-    );
-    console.log(response);
-    console.log(response.data);
-    console.log(response.status);
-    console.log(response.headers);
-    if(response.status===201){
-      alert(response.data.msg);
-      document.getElementById("email").value="";
-      document.getElementById("password").value="";
-      return;
+      onLogin(document.getElementById("email").value);
+      navigate("/problemList");
+    } catch (err) {
+      alert(`${err.response.data.msg}, please try again`);
     }
-    else if(response.status===202){
-      alert(response.data.msg);
-      document.getElementById("password").value="";
-      return;
-    }
-    else if(response.status===203){
-      alert(response.data.msg);
-      return;
-    }
-    onLogin(document.getElementById("email").value);
-    navigate("/problemList");
   }
 
   async function handleSignUp() {
@@ -185,7 +189,7 @@ function AuthPage({ onLogin }) {
       console.log(error.response.data.msg);
 
       // alert(`${error.response.data.msg}, please try again`);
-
+      // here there is no alert because this feature is abstracted from the user, means there is no need of mentioning the functionality and the progress of this feature.
       // Handle sign-up error or show error message
     }
   }
@@ -211,7 +215,12 @@ function AuthPage({ onLogin }) {
             className="border-2 border-black rounded"
           />
         </div>
-        <button onClick={() => manLogin()} className="border-2 border-black text-xl rounded">Sign In</button>
+        <button
+          onClick={() => manLogin()}
+          className="border-2 border-black text-xl rounded"
+        >
+          Sign In
+        </button>
         <button
           onClick={() => login()}
           className="border-2 border-black text-xl rounded"

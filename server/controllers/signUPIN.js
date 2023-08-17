@@ -1,3 +1,5 @@
+//this file if fine with error handling, status code 500
+
 import nodemailer from "nodemailer";
 import Mailgen from "mailgen";
 import { generateOtp } from "../utils/common.js";
@@ -9,85 +11,90 @@ import dotenv from "dotenv";
 dotenv.config();
 
 export const signUP = async (req, res) => {
-  const { name, email, password } = req.body;
-  let otp = generateOtp(6);
-  console.log(req.body);
-  const user = {
-    useremail: email,
-    otp: otp,
-  };
+  try {
+    const { name, email, password } = req.body;
+    let otp = generateOtp(6);
+    console.log(req.body);
+    const user = {
+      useremail: email,
+      otp: otp,
+    };
 
-  const userPermanent = await userDetails.findOne({ useremail: email });
-  if (userPermanent) {
-    return res.status(201).json({ msg: "user already exists" });
-  }
+    const userPermanent = await userDetails.findOne({ useremail: email });
+    if (userPermanent) {
+      return res.status(201).json({ msg: "user already exists" });
+    }
 
-  //lets find whether the user is already having the account\
-  const userExists = await userDetailsTemp.findOne({ useremail: email });
-  //give me the code to check whether the userExists contains otp field or not
+    //lets find whether the user is already having the account\
+    const userExists = await userDetailsTemp.findOne({ useremail: email });
+    //give me the code to check whether the userExists contains otp field or not
 
-  if (userExists) {
-    otp = userExists.otp;
-  } else {
-    //user details are saved here as soon as the button signup is clicked before otp verification
-    const userToSave = new userDetailsTemp(user);
-    console.log(userToSave);
-    await userToSave
-      .save()
-      .then((result) => {
-        console.log(result);
+    if (userExists) {
+      otp = userExists.otp;
+    } else {
+      //user details are saved here as soon as the button signup is clicked before otp verification
+      const userToSave = new userDetailsTemp(user);
+      console.log(userToSave);
+      await userToSave
+        .save()
+        .then((result) => {
+          console.log(result);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+
+    let config = {
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL,
+        pass: process.env.PASSWORD,
+      },
+    };
+
+    const transporter = nodemailer.createTransport(config);
+
+    let mailGenerator = new Mailgen({
+      theme: "default",
+      product: {
+        name: "Mailgen",
+        link: "https://mailgen.js/",
+      },
+    });
+
+    const response = {
+      body: {
+        name: name,
+        intro: `this is your otp ${otp}`,
+        outro: "looking forward for long lasted connection with you",
+      },
+    };
+
+    let mail = mailGenerator.generate(response);
+
+    const message = {
+      from: process.env.EMAIL, // sender address
+      to: email, // list of receivers
+      subject: "email verification", // Subject line
+      html: mail, // html body
+    };
+
+    transporter
+      .sendMail(message)
+      .then((info) => {
+        return res.status(200).json({
+          msg: "email sent",
+        });
       })
       .catch((err) => {
         console.log(err);
+        return res.status(500).json({ err });
       });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ msg: `${err}, try again` });
   }
-
-  let config = {
-    service: "gmail",
-    auth: {
-      user: process.env.EMAIL,
-      pass: process.env.PASSWORD,
-    },
-  };
-
-  const transporter = nodemailer.createTransport(config);
-
-  let mailGenerator = new Mailgen({
-    theme: "default",
-    product: {
-      name: "Mailgen",
-      link: "https://mailgen.js/",
-    },
-  });
-
-  const response = {
-    body: {
-      name: name,
-      intro: `this is your otp ${otp}`,
-      outro: "looking forward for long lasted connection with you",
-    },
-  };
-
-  let mail = mailGenerator.generate(response);
-
-  const message = {
-    from: process.env.EMAIL, // sender address
-    to: email, // list of receivers
-    subject: "email verification", // Subject line
-    html: mail, // html body
-  };
-
-  transporter
-    .sendMail(message)
-    .then((info) => {
-      return res.status(200).json({
-        msg: "email sent",
-      });
-    })
-    .catch((err) => {
-      console.log(err);
-      return res.status(500).json({ err });
-    });
 };
 
 export const verifyOTP = async (req, res) => {
@@ -125,11 +132,11 @@ export const verifyOTP = async (req, res) => {
         res.status(400).json({ msg: "Invalid otp" });
       }
     } else {
-      res.status(600).json({ msg: "Email id incorrect or time expired" });
+      res.status(600).json({ msg: "sent otp expired, please try again" });
     }
   } catch (error) {
     res.status(500).json({
-      msg: "Error updating document",
+      msg: "Error in verifying, try again",
       error: error,
     });
   }
@@ -150,43 +157,53 @@ export const deleteAccount = async (req, res) => {
     }
   } catch (error) {
     res.status(500).json({
-      msg: "Error deleting account",
+      msg: "Error deleting account try again",
       error: error,
     });
   }
 };
 
 export const manLogin = async (req, res) => {
-  const { email, password } = req.body;
-  const userExists = await userDetails.findOne({ useremail: email });
-  if (!userExists) {
-    return res.status(201).json({ msg: "user does not exists, please signup" });
+  try {
+    const { email, password } = req.body;
+    const userExists = await userDetails.findOne({ useremail: email });
+    if (!userExists) {
+      return res
+        .status(201)
+        .json({ msg: "user does not exists, please signup" });
+    }
+    if (userExists.password === "google login user") {
+      return res
+        .status(203)
+        .json({
+          msg: "please login with google or create a new password by clicking the forgot pass button",
+        });
+    }
+    if (userExists.password !== sha512(password + process.env.SHA_SECRET)) {
+      return res.status(202).json({ msg: "password is incorrect" });
+    }
+    const tokenId = uuidv4();
+    const token = jwt.sign(
+      { email: userExists.useremail, tokenId: tokenId },
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" }
+    );
+    const cookieOptions = {
+      domain: "localhost",
+      path: "/",
+      // secure: true,
+      // httpOnly: true,
+    };
+    console.log("this is the token ", token);
+    res.cookie("token", token, cookieOptions);
+    res.status(200).json({
+      success: true,
+      msg: "Login Successful",
+      email: userExists.useremail,
+    });
+  } catch (err) {
+    return res.status(500).json({ msg: `${err}, try again` });
   }
-  if(userExists.password === "google login user"){
-    return res.status(203).json({ msg: "please login with google or create a new password by clicking the forgot pass button" });
-  }
-  if (userExists.password !== sha512(password + process.env.SHA_SECRET)) {
-    return res.status(202).json({ msg: "password is incorrect" });
-  }
-  const tokenId = uuidv4();
-  const token = jwt.sign(
-    { email: userExists.useremail, tokenId: tokenId },
-    process.env.JWT_SECRET,
-    { expiresIn: "1d" }
-  );
-  const cookieOptions = {
-    domain: "localhost",
-    path: "/",
-    // secure: true,
-    // httpOnly: true,
-  };
-  console.log("this is the token ", token);
-  res.cookie("token", token, cookieOptions);
-  res.status(200).json({
-    success: true,
-    message: "Login Successful",
-    email: userExists.useremail,
-  });
 };
 
 //this code snippet is saved because it has the functionality to update the document(deleting a field and adding a field)

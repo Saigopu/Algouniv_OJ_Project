@@ -1,3 +1,5 @@
+// this file is fine with error handling
+
 import express from "express";
 import validateJwt from "../middleware/validateJWT.js";
 

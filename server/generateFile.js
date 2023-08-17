@@ -1,3 +1,5 @@
+//handling the error so that app wont crash, and when error occures then we are returning empty string as the filepath
+
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -87,7 +89,8 @@ export const copyCodeToFile = async (
   problemName,
   directoryName
 ) => {
-  const dirCodes = path.join(__dirname, directoryName);
+  try{
+    const dirCodes = path.join(__dirname, directoryName);
   if (!fs.existsSync(dirCodes)) {
     fs.mkdirSync(dirCodes, { recursive: true });
   }
@@ -133,5 +136,10 @@ export const copyCodeToFile = async (
     }
     await fs.writeFileSync(filePathObject["filePathRunner"], content);
     return filePathObject["filePathRunner"];
+  }
+  }
+  catch(err){
+    console.log(err);
+    return "";
   }
 };
