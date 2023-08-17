@@ -15,6 +15,10 @@ const userDataSchema = new mongoose.Schema({
     // minlength: 6,
     //this is suggested by copilot, have to check how this will work
   }, 
+  picture:{
+    type: String,
+    required: false,
+  }
 });
 
 

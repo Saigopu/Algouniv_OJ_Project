@@ -92,9 +92,17 @@ const submittedFilesSchema= new mongoose.Schema({
     type: mongoose.Schema.Types.Number,
     required:true,
   },
+  name:{
+    type:String,
+    required:true,
+  },
   filePathRunner:{
     type:String,
     required:true,
+  },
+  isSolved:{
+    type:Boolean,
+    default:false,
   },
 })
 export const submittedFiles=mongoose.model("submittedFiles",submittedFilesSchema);

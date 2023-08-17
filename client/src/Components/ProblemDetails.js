@@ -63,6 +63,7 @@ const ProblemDetails = ({onLogout}) => {
             input: userInput,
             email: sessionStorage.getItem("email"),
             problemID: problemID,
+            problemName: problemDetails.name,
           },
           {
             withCredentials: true,
@@ -143,6 +144,7 @@ const ProblemDetails = ({onLogout}) => {
             code: userCode,
             email: sessionStorage.getItem("email"),
             problemID: problemID,
+            problemName: problemDetails.name,
           },
           {
             withCredentials: true,

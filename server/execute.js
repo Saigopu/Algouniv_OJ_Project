@@ -33,9 +33,17 @@ const smoothString = (str) => {
 export const execute = (filepath, input) => {
   //C:\Users\GOPI KRISHNA\OneDrive\Documents\algodev\Online_Judge\server\codes\c23f7f0a-d29d-4ece-812a-79298be9d697.cpp
   console.log(filepath);
-  let jobId = path.basename(filepath).split(".")[0]+"."+path.basename(filepath).split(".")[1]
-  console.log("the jobid in execute.js in the execute method first ",path.basename(filepath).split(".")[0]+"."+path.basename(filepath).split(".")[1])
-  console.log("the jobid in execute.js in the execute method second ",jobId)
+  let jobId =
+    path.basename(filepath).split(".")[0] +
+    "." +
+    path.basename(filepath).split(".")[1];
+  console.log(
+    "the jobid in execute.js in the execute method first ",
+    path.basename(filepath).split(".")[0] +
+      "." +
+      path.basename(filepath).split(".")[1]
+  );
+  console.log("the jobid in execute.js in the execute method second ", jobId);
   const outPath = path.join(outputPath, `${jobId}.exe`);
   console.log(outPath);
   //${filepath} wrapped that in double inverted commas so that if the spaces are present in the filepath then they are ignored otherwise the parts of the filepath which are separated by space will be considered as different commands
@@ -121,10 +129,13 @@ export const expectedOutput = (problemID, input) => {
 };
 
 export const verdict = async (filepath, problemID) => {
-  let jobId = path.basename(filepath).split(".")[0]+"."+path.basename(filepath).split(".")[1]
+  let jobId =
+    path.basename(filepath).split(".")[0] +
+    "." +
+    path.basename(filepath).split(".")[1];
   const outPath = path.join(outputPath, `${jobId}.exe`);
   //fetch the testcases of the problem problemID from mongo
-  console.log(typeof problemID, problemID, "in verdict function of execute.js")
+  console.log(typeof problemID, problemID, "in verdict function of execute.js");
   const testcases = await testCases.findOne({ problemID: problemID });
   console.log(testcases);
   return new Promise((resolve, reject) => {
@@ -153,7 +164,7 @@ export const verdict = async (filepath, problemID) => {
       }
       i++;
     }
-
-    resolve("accepted");
+    console.log("all testcases passed in verdict function of execute.js");
+    resolve("Accepted");
   });
 };

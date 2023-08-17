@@ -10,7 +10,7 @@ function LogOut({onLogout}) {
   }
   return (
     <div >
-      <button onClick={handleLogout}>Sign Out</button>
+      <button onClick={handleLogout} className="border-2 border-black rounded bg-red-400">Sign Out</button>
     </div>
   );
 }

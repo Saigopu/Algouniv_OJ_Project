@@ -84,6 +84,7 @@ export const copyCodeToFile = async (
   content,
   email,
   problemID,
+  problemName,
   directoryName
 ) => {
   const dirCodes = path.join(__dirname, directoryName);
@@ -102,6 +103,7 @@ export const copyCodeToFile = async (
     const userToSave = new submittedFiles({
       useremail: email,
       problemID: problemID,
+      name: problemName,
       filePathRunner: filePath,
     });
     await userToSave

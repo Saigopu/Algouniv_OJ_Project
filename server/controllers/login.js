@@ -48,6 +48,7 @@ export const login = async (req, res) => {
             username: user.name,
             useremail: user.email,
             password: "google login user",
+            picture: user.picture,
           };
 
           saveUserToDatabase(savingUser)

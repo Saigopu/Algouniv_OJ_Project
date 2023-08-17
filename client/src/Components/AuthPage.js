@@ -199,7 +199,7 @@ function AuthPage({ onLogin }) {
             id="email"
             type="text"
             placeholder="email"
-            className="border-2 border-black"
+            className="border-2 border-black rounded"
           />
         </div>
         <div>
@@ -208,20 +208,20 @@ function AuthPage({ onLogin }) {
             id="password"
             type="password"
             placeholder="password"
-            className="border-2 border-black"
+            className="border-2 border-black rounded"
           />
         </div>
-        <button onClick={() => manLogin()} className="border-2 border-black text-xl">Sign In</button>
+        <button onClick={() => manLogin()} className="border-2 border-black text-xl rounded">Sign In</button>
         <button
           onClick={() => login()}
-          className="border-2 border-black text-xl"
+          className="border-2 border-black text-xl rounded"
         >
           Google
         </button>
         {/* Toggle the sign-up pop-up visibility */}
         <button
           onClick={() => setShowSignUp(!showSignUp)}
-          className="border-2 border-black text-xl"
+          className="border-2 border-black text-xl rounded"
         >
           Sign Up
         </button>
@@ -238,7 +238,7 @@ function AuthPage({ onLogin }) {
                 id="name"
                 type="text"
                 placeholder="Name"
-                className="border-2 border-black"
+                className="border-2 border-black rounded"
                 disabled={showOTP}
                 required
               />
@@ -249,7 +249,7 @@ function AuthPage({ onLogin }) {
                 id="signupEmail"
                 type="email"
                 placeholder="Email"
-                className="border-2 border-black"
+                className="border-2 border-black rounded"
                 disabled={showOTP}
                 required
               />
@@ -260,7 +260,7 @@ function AuthPage({ onLogin }) {
                 id="signupPassword"
                 type="password"
                 placeholder="Password"
-                className="border-2 border-black"
+                className="border-2 border-black rounded"
                 disabled={showOTP}
                 required
               />
@@ -271,13 +271,13 @@ function AuthPage({ onLogin }) {
                   onClick={() => {
                     handleSignUp(); // Handle sign-up functionality
                   }}
-                  className="border-2 border-black text-xl mt-4"
+                  className="border-2 border-black text-xl mt-4 rounded"
                 >
                   Sign Up
                 </button>
                 <button
                   onClick={() => setShowSignUp(false)} // Hide the pop-up when cancel button is clicked
-                  className="border-2 border-black text-xl mt-4 ml-2"
+                  className="border-2 border-black text-xl mt-4 ml-2 rounded"
                 >
                   Cancel
                 </button>
@@ -291,14 +291,14 @@ function AuthPage({ onLogin }) {
                   id="otp"
                   type="text"
                   placeholder="OTP"
-                  className="border-2 border-black"
+                  className="border-2 border-black rounded"
                 />
                 <button
                   onClick={() => {
                     verifyOTP();
                     //implemet:- verifying otp function should be handled here. if the otp is correct then only the above two should happen , otherwise no component change, simply show the error message
                   }}
-                  className="border-2 border-black"
+                  className="border-2 border-black rounded"
                 >
                   Verify
                 </button>
