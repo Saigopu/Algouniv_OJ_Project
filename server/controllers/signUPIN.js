@@ -12,7 +12,7 @@ dotenv.config();
 
 export const signUP = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email } = req.body;
     let otp = generateOtp(6);
     console.log(req.body);
     const user = {
@@ -27,7 +27,7 @@ export const signUP = async (req, res) => {
 
     //lets find whether the user is already having the account\
     const userExists = await userDetailsTemp.findOne({ useremail: email });
-    //give me the code to check whether the userExists contains otp field or not
+    
 
     if (userExists) {
       otp = userExists.otp;

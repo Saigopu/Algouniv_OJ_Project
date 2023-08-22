@@ -15,6 +15,7 @@ import {
 import { getProblemList, getFullProblem } from "../controllers/problems.js";
 import { getUserDetails } from "../controllers/userDetails.js";
 import { submittedFiles } from "../models/problemList.js";
+import { forgotPassword,resetVerifyOTP,passwordReset } from "../controllers/forgotPass.js";
 import path from "path";
 import { fileURLToPath } from "url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -34,6 +35,9 @@ router.post("/signUp", signUP);
 router.post("/verifyOTP", verifyOTP);
 router.post("/deleteAccount", deleteAccount);
 router.post("/manLogin", manLogin);
+router.post("/forgotPass", forgotPassword);
+router.post("/checkResetOTP",resetVerifyOTP);
+router.post("/resetPass",passwordReset)
 router.get("/check", (req, res) => {
   res.json("checked");
 });

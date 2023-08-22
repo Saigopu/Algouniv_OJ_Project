@@ -7,7 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import React from "react";
 const API_URI = "http://localhost:3000";
-const ProblemDetails = ({onLogout}) => {
+const ProblemDetails = ({ onLogout }) => {
   const navigate = useNavigate();
 
   const [userCode, setUserCode] = useState("");
@@ -229,7 +229,7 @@ To achieve the desired layout where the first inner div only takes the height ne
               onChange={(e) => {
                 setUserCode(e.target.value);
               }}
-              placeholder="Write your code here..."
+              placeholder="Write your code here(supports only cpp)..."
             />
           </div>
           {/* in the below classname removed flex-col flex-1 */}
