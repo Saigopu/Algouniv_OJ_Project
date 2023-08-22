@@ -62,13 +62,13 @@ export const execute = (filepath, input) => {
     // })
     let output = "";
 
-    const command = `g++ "${filepath}" -o "${outPath}" && cd "${outputPath}" && .\\${jobId}.exe`; //this command is working when i run locally with the spawn which has cmd as the first parameter
-    // const command = `g++ ${filepath} -o ${outPath} && cd ${outputPath} && ./${jobId}.exe`;//this command is working when i run in docker container with the spawn which has sh as the first parameter
+    // const command = `g++ "${filepath}" -o "${outPath}" && cd "${outputPath}" && .\\${jobId}.exe`; //this command is working when i run locally with the spawn which has cmd as the first parameter
+    const command = `g++ ${filepath} -o ${outPath} && cd ${outputPath} && ./${jobId}.exe`;//this command is working when i run in docker container with the spawn which has sh as the first parameter
 
     //spawn is like the inbuilt function, in this type of cases it is better to define the parameters and then pass instead passing directly, here when i passed the command directly then i was getting an error ragarding the spaces in the filepath
 
-    const process = spawn("cmd", ["/s", "/c", command], { shell: true }); //used this when i was using the windows(for making it to run locally)
-    // const process = spawn("sh", ["-c", command]);//used this when i was using the linux(for making it to run in docker container)
+    // const process = spawn("cmd", ["/s", "/c", command], { shell: true }); //used this when i was using the windows(for making it to run locally)
+    const process = spawn("sh", ["-c", command]);//used this when i was using the linux(for making it to run in docker container)
 
     process.stdin.write(input);
     process.stdin.end();
@@ -109,10 +109,12 @@ export const expectedOutput = (problemID, input) => {
     /* const command = `g++ "${filepath}" -o "${outPath}" && cd "${expectedOutputPath}" && .\\${jobId}.exe`;
     here the error was the .\\problemID.exe is not recognised as internal or external command then tried replacing the cmd.exe in spawn with command then it worked but the arguments /s /c has no sense in keeping actually they are for cmd.exe where /s is for suppressing the special characters as the part of the strings and /c is for closing the shell after the use, so changed the command to the final present one where it is working as expected and the arguments are applied to cmd.
     */
-    const command = `cd "${expectedOutputPath}" && ${jobId}.exe`;
+    // const command = `cd "${expectedOutputPath}" && ${jobId}.exe`;//used this command for running locally
+    const command = `cd ${expectedOutputPath} && ./${jobId}.exe`;//used this command for running in docker
     const commandWithOptions = `cmd /s /c "${command}"`;
-    const process = spawn(commandWithOptions, { shell: true });
     // const process = spawn(command, ["/s", "/c", ], { shell: true });
+    // const process = spawn(commandWithOptions, { shell: true });//used this to run locally 
+    const process = spawn("sh", ["-c", command]);//used this to run in docker
     process.stdin.write(input);
     process.stdin.end();
     process.stdout.on("data", (data) => {
@@ -166,8 +168,10 @@ export const verdict = async (filepath, problemID) => {
     console.log(t);
     let i = 0;
     while (t--) {
-      const command = `cd "${outputPath}" && ${jobId}.exe`;
-      const commandWithOptions = `cmd /s /c "${command}"`;
+      // const command = `cd "${outputPath}" && ${jobId}.exe`;//used this to run locally 
+      // const commandWithOptions = `cmd /s /c "${command}"`;//used this to run locally 
+      const command = `cd ${outputPath} && ./${jobId}.exe`;//used this to run docker 
+      const commandWithOptions = `sh -c "${command}"`;//used this to run docker 
       const output = execSync(commandWithOptions, {
         input: testcases["input"][i],
       }).toString();

@@ -22,9 +22,9 @@ app.use(cors({
   }));
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
-app.use(express.static('build'));
-// const __dirname = path.dirname(fileURLToPath(import.meta.url));
-// app.use(express.static(path.join(__dirname, 'build')));
+app.use(express.static('build'));//check if this effects on commenting
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+app.use(express.static(path.join(__dirname, 'build')));
 
 
 /*
