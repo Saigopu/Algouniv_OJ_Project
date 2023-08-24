@@ -6,7 +6,8 @@ import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import React from "react";
-const API_URI = "http://localhost:3000";
+// const API_URI = "http://localhost:3000";
+const API_URI = "http://18.209.111.224:3000";
 const ProblemDetails = ({ onLogout }) => {
   const navigate = useNavigate();
 

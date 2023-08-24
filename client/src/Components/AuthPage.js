@@ -6,7 +6,8 @@ import { useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const API_URI = "http://localhost:3000";
+// const API_URI = "http://localhost:3000";
+const API_URI = "http://18.209.111.224:3000";
 
 function AuthPage({ onLogin }) {
   const navigate = useNavigate();

@@ -16,9 +16,10 @@ export const login = async (req, res) => {
       client_id:
         "6211912636-or3dqncfo54qkbt2e9835v3oej7lis2j.apps.googleusercontent.com",
       client_secret: "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",
-      redirect_uri: "http://localhost:3000",
+      redirect_uri: "http://18.209.111.224:3000",
       //here in the above url the port was 3000 because for frontend the port was 3000 and for backend it is 8000 but later i changed the port of the backend to 3000 and frontend will run in 3001 , so i was facing the google login error, the error was "network error", then i have changed the port number and it worked. i found the error is occuring in this file by adding the catches for the api call that are made here , initailly ther were not there and the app was crashing and was unable to detect where the error was occuring, try catches and the .catch which follows .then during the returned promise resolution are important
       //now changing the port to 3000 again as iam done with the development and iam testing it in the docker so i think the page should be redirected to 3000
+      //changed localhost to ip address that we get on creating the instance in aws
       grant_type: "authorization_code",
     })
     .then((response) => {
@@ -40,10 +41,11 @@ export const login = async (req, res) => {
             { expiresIn: "1d" }
           );
           const cookieOptions = {
-            domain: "localhost",
+            // domain: "localhost",
+            domain: "18.209.111.224",
             path: "/",
             // secure: true,
-            // httpOnly: true,
+            httpOnly: true,
           };
           console.log("this is the token ", token);
 

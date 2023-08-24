@@ -7,7 +7,8 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
 
-const API_URI = "http://localhost:3000";
+// const API_URI = "http://localhost:3000";
+const API_URI = "http://18.209.111.224:3000";
 function ProblemList({ onLogout }) {
   const navigate = useNavigate();
   const [problemList, setProblemList] = useState(null);

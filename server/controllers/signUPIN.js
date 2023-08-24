@@ -189,10 +189,11 @@ export const manLogin = async (req, res) => {
       { expiresIn: "1d" }
     );
     const cookieOptions = {
-      domain: "localhost",
+      // domain: "localhost",
+      domain: "18.209.111.224",
       path: "/",
       // secure: true,
-      // httpOnly: true,
+      httpOnly: true,
     };
     console.log("this is the token ", token);
     res.cookie("token", token, cookieOptions);

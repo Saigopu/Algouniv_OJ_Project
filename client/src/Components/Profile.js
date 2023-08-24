@@ -7,7 +7,8 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-const API_URI = "http://localhost:3000";
+// const API_URI = "http://localhost:3000";
+const API_URI = "http://18.209.111.224:3000";
 function Profile({ onLogout }) {
   const navigate = useNavigate();
   const [userDetails, setUserDetails] = useState(null);
